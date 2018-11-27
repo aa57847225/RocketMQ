@@ -1,7 +1,7 @@
 package com.whl.demo;
 
 
-import com.whl.demo.example.MQProducer;
+import com.whl.demo.config.MQProducer;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;

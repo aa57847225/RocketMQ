@@ -1,4 +1,4 @@
-package com.whl.demo.example;
+package com.whl.demo.config;
 
 
 import org.apache.rocketmq.client.exception.MQClientException;

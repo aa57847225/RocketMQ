@@ -1,5 +1,9 @@
-package com.whl.demo.example;
+package com.whl.demo.consumer;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.whl.demo.entity.Student;
+import com.whl.demo.mapper.StudentMapper;
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
 import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyContext;
 import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyStatus;
@@ -16,6 +20,7 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
+import javax.annotation.Resource;
 import java.util.List;
 
 @Component
@@ -27,6 +32,10 @@ public class MQPushConsumer implements MessageListenerConcurrently {
     private String namesrvAddr;
 
     private final DefaultMQPushConsumer consumer = new DefaultMQPushConsumer("TestRocketMQPushConsumer");
+
+
+    @Resource
+    private StudentMapper studentMapper;
 
     /**
      * 初始化
@@ -72,6 +81,12 @@ public class MQPushConsumer implements MessageListenerConcurrently {
                 String messageBody = new String(msg.getBody(), RemotingHelper.DEFAULT_CHARSET);
 
                 LOGGER.info("MQ：消费者接收新信息: {} {} {} {} {}", msg.getMsgId(), msg.getTopic(), msg.getTags(), msg.getKeys(), messageBody);
+
+                if("student".equals(msg.getTags())){
+                    Student student = JSONObject.parseObject(messageBody,Student.class);
+                    Student s = studentMapper.findById(student.getsNo());
+                    LOGGER.info("========student========"+ JSON.toJSONString(s));
+                }
             }
         } catch (Exception e) {
             LOGGER.error(e.getMessage(), e);

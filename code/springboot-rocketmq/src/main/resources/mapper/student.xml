@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.whl.demo.mapper.StudentMapper">
+
+    <resultMap id="BaseResultMap" type="com.whl.demo.entity.Student">
+        <result property="sNo" column="s_no" />
+        <result property="sName" column="sname" />
+        <result property="sAge" column="sage" />
+        <result property="sSex" column="ssex" />
+    </resultMap>
+
+    <insert id="insert" parameterType="com.whl.demo.entity.Student" useGeneratedKeys="true" keyProperty="sNo" keyColumn="s_no">
+        insert into student
+        (sname,sage,ssex)
+        values
+        (#{sName},#{sAge},#{sSex})
+
+        <selectKey resultType="int" keyProperty="sNo" order="AFTER">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+    </insert>
+    
+    <select id="findById" parameterType="integer" resultMap="BaseResultMap">
+        select * from student where s_no = #{sNo}
+    </select>
+
+    <select id="findAll" resultMap="BaseResultMap">
+        select * from student
+    </select>
+</mapper>
