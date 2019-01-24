@@ -9,7 +9,7 @@
   The Name Server boot success...
   
   
-   > nohup sh bin/mqbroker -n localhost:9876 &
+   > nohup sh bin/mqbroker -n localhost:9876 autoCreateTopicEnable=true &
   > tail -f ~/logs/rocketmqlogs/broker.log 
   The broker[%s, 172.30.30.233:10911] boot success...
   
@@ -29,3 +29,6 @@ Send shutdown request to mqbroker(36695) OK
 > sh bin/mqshutdown namesrv
 The mqnamesrv(36664) is running...
 Send shutdown request to mqnamesrv(36664) OK
+
+内存不足的话 修改  bin/runserver.sh  bin/runbroker.sh   
+JAVA_OPT="${JAVA_OPT} -server -Xms4g -Xmx4g -Xmn2g -XX:MetaspaceSize=128m -XX:MaxMetaspaceSize=320m"
