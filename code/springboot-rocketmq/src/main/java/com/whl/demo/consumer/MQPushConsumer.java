@@ -52,8 +52,9 @@ public class MQPushConsumer implements MessageListenerConcurrently {
             consumer.setConsumeFromWhere(ConsumeFromWhere.CONSUME_FROM_FIRST_OFFSET);
             // 集群消费模式
             consumer.setMessageModel(MessageModel.CLUSTERING);
-            // 订阅主题
+            // 订阅主题 多个
             consumer.subscribe("TopicTest", "*");
+            consumer.subscribe("student","*");
             // 注册消息监听器
             consumer.registerMessageListener(this);
             // 启动消费端
@@ -77,6 +78,10 @@ public class MQPushConsumer implements MessageListenerConcurrently {
         try {
             for (; index < msgs.size(); index++) {
                 MessageExt msg = msgs.get(index);
+                // int reconsume = msg.getReconsumeTimes();
+//                if(reconsume ==3){//消息已经重试了3次，如果不需要再次消费，则返回成功
+//                    return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
+//                }
 
                 String messageBody = new String(msg.getBody(), RemotingHelper.DEFAULT_CHARSET);
 

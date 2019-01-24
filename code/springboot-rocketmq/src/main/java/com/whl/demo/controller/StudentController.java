@@ -26,7 +26,7 @@ public class StudentController {
         Integer row =  studentMapper.insert(student);
         System.out.println("================row=============="+row);
         System.out.println("================studentId=============="+student.getsNo());
-        mqProducer.sendMessage(JSON.toJSONString(student),"TopicTest","student","");
+        mqProducer.sendMessage(JSON.toJSONString(student),"student","student","");
         return null;
     }
 }
