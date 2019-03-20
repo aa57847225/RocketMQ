@@ -1,0 +1,41 @@
+  1.安装
+  > unzip rocketmq-all-4.2.0-source-release.zip
+  > cd rocketmq-all-4.2.0/
+  > mvn -Prelease-all -DskipTests clean install -U
+  > cd distribution/target/apache-rocketmq
+
+2.启动 mqnamesrv
+    > nohup sh bin/mqnamesrv &
+  > tail -f ~/logs/rocketmqlogs/namesrv.log
+  The Name Server boot success...
+
+3.启动mqbroker
+   > nohup sh bin/mqbroker -n localhost:9876 autoCreateTopicEnable=true &
+  > tail -f ~/logs/rocketmqlogs/broker.log
+  The broker[%s, 172.30.30.233:10911] boot success...
+
+3.测试生产者
+   > export NAMESRV_ADDR=localhost:9876
+ > sh bin/tools.sh org.apache.rocketmq.example.quickstart.Producer
+ SendResult [sendStatus=SEND_OK, msgId= ...
+
+4.测试消费者
+ > sh bin/tools.sh org.apache.rocketmq.example.quickstart.Consumer
+ ConsumeMessageThread_%d Receive New Messages: [MessageExt...
+
+5停止broker
+ > sh bin/mqshutdown broker
+The mqbroker(36695) is running...
+Send shutdown request to mqbroker(36695) OK
+
+6.停止 mqnamesrv
+> sh bin/mqshutdown namesrv
+The mqnamesrv(36664) is running...
+Send shutdown request to mqnamesrv(36664) OK
+
+内存不足的话 修改  bin/runserver.sh  bin/runbroker.sh
+JAVA_OPT="${JAVA_OPT} -server -Xms4g -Xmx4g -Xmn2g -XX:MetaspaceSize=128m -XX:MaxMetaspaceSize=320m"
+
+7.常用命令
+创建topic
+sh mqadmin updateTopic -n 192.168.30.150:9876 -b 192.168.30.150:10911 -t orderTopic
