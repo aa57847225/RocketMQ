@@ -13,6 +13,11 @@ import org.apache.rocketmq.common.message.Message;
 public class TransactionExecuterImpl implements LocalTransactionExecuter {
     // private AtomicInteger transactionIndex = new AtomicInteger(1);
 
+    //DB操作 应该带上事务 service -> dao
+    //如果数据操作失败  需要回滚    同时返回RocketMQ一个失败消息  意味着 消费者无法消费到这条失败的消息
+    //如果成功 就要返回一个rocketMQ成功的消息，意味着消费者将读取到这条消息
+    //o就是attachment
+
     @Override
     public LocalTransactionState executeLocalTransactionBranch(final Message msg, final Object arg) {
 

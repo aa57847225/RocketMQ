@@ -18,7 +18,8 @@ public class Producer {
 
         TransactionCheckListener transactionCheckListener = new TransactionCheckListenerImpl();
         TransactionMQProducer producer = new TransactionMQProducer("transaction_Producer");
-        producer.setNamesrvAddr("192.168.100.145:9876;192.168.100.146:9876;192.168.100.149:9876;192.168.100.239:9876");
+//        producer.setNamesrvAddr("192.168.100.145:9876;192.168.100.146:9876;192.168.100.149:9876;192.168.100.239:9876");
+        producer.setNamesrvAddr("192.168.0.69:9876");
         // 事务回查最小并发数
         producer.setCheckThreadPoolMinSize(2);
         // 事务回查最大并发数
