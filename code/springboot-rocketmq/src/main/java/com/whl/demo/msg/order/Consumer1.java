@@ -30,14 +30,21 @@ public class Consumer1 {
          */
         consumer.setConsumeFromWhere(ConsumeFromWhere.CONSUME_FROM_FIRST_OFFSET);
 
+        /**
+         * 订阅指定topic下tags分别等于TagA或TagC或TagD, 这里没有订阅TagB的消息,所以不会消费标签为TagB的消息，*代表不过滤 接受一切
+         */
         consumer.subscribe("TopicOrderTest", "*");
 
         consumer.registerMessageListener(new MessageListenerOrderly() {
             AtomicLong consumeTimes = new AtomicLong(0);
 
+            /**
+             * 如果是顺序消息,这边的监听就要使用MessageListenerOrderly监听
+             * 并且,返回结果也要使用ConsumeOrderlyStatus
+             */
             @Override
             public ConsumeOrderlyStatus consumeMessage(List<MessageExt> msgs, ConsumeOrderlyContext context) {
-                // 设置自动提交
+                // 设置自动提交,如果不设置自动提交就算返回SUCCESS,消费者关闭重启 还是会重复消费的
                 context.setAutoCommit(true);
                 for (MessageExt msg : msgs) {
                     System.out.println(msg + ",内容：" + new String(msg.getBody()));
@@ -48,13 +55,18 @@ public class Consumer1 {
                 } catch (InterruptedException e) {
 
                     e.printStackTrace();
+                    //如果出现异常,消费失败，挂起消费队列一会会，稍后继续消费
+                    return ConsumeOrderlyStatus.SUSPEND_CURRENT_QUEUE_A_MOMENT;
                 }
                 ;
-
+                //消费成功
                 return ConsumeOrderlyStatus.SUCCESS;
             }
         });
 
+        /**
+         * Consumer对象在使用之前必须要调用start初始化，初始化一次即可
+         */
         consumer.start();
 
         System.out.println("Consumer1 Started.");
